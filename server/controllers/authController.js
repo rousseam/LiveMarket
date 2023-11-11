@@ -14,6 +14,12 @@ const registerUser = async (req, res) => {
             });
         }
 
+        if (!email) {
+            return res.json({
+                error: 'Name is required'
+            });
+        }
+
         if (!password || password.length < 6) {
             return res.json({
                 error: 'Password is required and should be at least 6 chars'
