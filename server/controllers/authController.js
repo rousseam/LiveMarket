@@ -36,9 +36,41 @@ const registerUser = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
+};
+
+const loginUser = async (req, res) => {
+    try {
+        const {email, password} = req.body;
+        if (!email) {
+            return res.json({
+                error: 'Email is required'
+            });
+        }
+        if (!password) {
+            return res.json({
+                error: 'Password is required'
+            });
+        }
+        const user = await User.findOne({email}).exec();
+        if (!user) {
+            return res.json({
+                error: 'Email is not registered, please do so before login'
+            });
+        }
+        const isPasswordRight = await comparePassword(password, user.password);
+        if (!isPasswordRight) {
+            return res.json({
+                error: 'Incorrect password'
+            });
+        }
+        return res.json('Correct password');
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 module.exports = {
     test,
-    registerUser
+    registerUser,
+    loginUser
 }
