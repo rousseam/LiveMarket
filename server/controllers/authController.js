@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const {hashPassword, comparePassword} = require('../helpers/auth');
 const jwt = require('jsonwebtoken');
+const finnhub = require('finnhub');
 
 const test = (req, res) => {
     res.json('test is working');
@@ -75,8 +76,47 @@ const loginUser = async (req, res) => {
     }
 }
 
+const getProfile = (req, res) => {
+    const {token} = req.cookies;
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+            if (err) {
+                throw err;
+            }
+            res.json(user);
+        })
+    } else {
+        res.json(null);
+    }
+};
+
+const getQuote = (req, res) => {
+    try {
+        const symbol = req.params.symbol;
+        const api_key = finnhub.ApiClient.instance.authentications['api_key'];
+        api_key.apiKey = "cl976g9r01qjo3godrl0cl976g9r01qjo3godrlg";
+        const finnhubClient = new finnhub.DefaultApi();
+        if (!symbol) {
+            res.json({error: 'Missing symbol to use finnhub quote API'});
+        } else {
+            finnhubClient.quote(symbol, (error, data, response) => {
+                if (error) {
+                    res.json({error});
+                } else {
+                    res.json(data);
+                }
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+        
+}
+
 module.exports = {
     test,
     registerUser,
-    loginUser
+    loginUser,
+    getProfile,
+    getQuote
 }
