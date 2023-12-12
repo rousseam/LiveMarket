@@ -22,10 +22,9 @@ export default function Login() {
         toast.error(data.error);
       } else {
         setData({});
-        toast.success('Login successful, welcome again !');
-        navigate('/');
+        toast.success(`Welcome again ${data.name} !`);
+        navigate('/dashboard');
       }
-
     } catch (error) {
       console.log(error);
     }
