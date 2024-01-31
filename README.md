@@ -1,5 +1,5 @@
-# QuantDev
+# LiveMarket
 
-QuantDev is a web hosted software dedicated for quantitative developers. It allows them to :
-- access live market data like stock prices
-- backtest quantitative strategies over different periods of time or markets
+## About the project
+
+LiveMarket is a web financial app that centralize live market data (as stocks, crypto, market news) and portfolio tracking for investors.

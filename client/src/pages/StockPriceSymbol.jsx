@@ -16,9 +16,6 @@ export default function StockPriceSymbol() {
     socket.onmessage = (event) => {
         const message = JSON.parse(event.data);
         setStockPrice(message.data.pop().p);
-        if (quote) {
-            setDiffPercent((stockPrice - quote.pc)/quote.pc * 100)
-        }
     };
 
     useEffect(() => {
@@ -29,6 +26,9 @@ export default function StockPriceSymbol() {
                 try {
                     const {data} = await axios.get(`/quote/${symbol}`)
                     setQuote(data);
+                    if (quote) {
+                        setDiffPercent((stockPrice - quote.o)/quote.o * 100)
+                    }
                 } catch (error) {
                     console.log(error);
                 }
@@ -38,12 +38,12 @@ export default function StockPriceSymbol() {
         if (symbol) {
             doAsync();
         }
-    }, [symbol]);
+    }, [symbol, stockPrice]);
 
     return (
         <div style={{outline: '2px solid #646cffaa', borderRadius: '2rem', fontSize: '0.4em', display: 'grid'}}>
             <div>{stockPrice ? (<h1>{symbol} : {stockPrice}$</h1>) : (<h1>{symbol} : {quote.c}$</h1>)}</div>
-            <div>{diffPercent ? (<h1>Variation: {JSON.stringify(diffPercent)}</h1>) : (<h1>Variation: {JSON.stringify(quote.dp)}</h1>)}</div>
+            <div>{diffPercent ? (<h1>Variation: {JSON.stringify(diffPercent)}%</h1>) : (<h1>Variation: {JSON.stringify(quote.dp)}%</h1>)}</div>
         </div>
     )
 }
